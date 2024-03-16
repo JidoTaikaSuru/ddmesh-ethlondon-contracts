@@ -27,6 +27,10 @@ export interface DDMeshMarketInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "DEFAULT_ADMIN_ROLE"
+      | "addressToProvider"
+      | "agreementIdToAgreement"
+      | "agreementIdTotalCount"
+      | "agreements"
       | "closeAgreementByProvider"
       | "closeAgreementByUser"
       | "enterAgreement"
@@ -34,22 +38,28 @@ export interface DDMeshMarketInterface extends Interface {
       | "grantRole"
       | "hasRole"
       | "owner"
-      | "providerToAgreement"
+      | "providerAgreements"
+      | "providerIdToAgreements"
+      | "providerIdToProvider"
+      | "providerIdTotalCount"
       | "registerProvider"
       | "renounceOwnership"
       | "renounceRole"
       | "revokeRole"
+      | "setConnectionStringAndActivateAggrement"
       | "supportsInterface"
+      | "token"
       | "transferOwnership"
-      | "userToAgreement"
+      | "userAgreements"
       | "withdrawBalanceUser"
       | "withdrawReward"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "AgreementActivated"
       | "AgreementClosed"
-      | "EnterAgreementAndPay"
+      | "AgreementCreated"
       | "OwnershipTransferred"
       | "ProviderRegistered"
       | "RoleAdminChanged"
@@ -64,16 +74,32 @@ export interface DDMeshMarketInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "closeAgreementByProvider",
+    functionFragment: "addressToProvider",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "agreementIdToAgreement",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "agreementIdTotalCount",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "agreements",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "closeAgreementByProvider",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "closeAgreementByUser",
-    values?: undefined
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "enterAgreement",
-    values: [BigNumberish, AddressLike]
+    values: [AddressLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -89,12 +115,24 @@ export interface DDMeshMarketInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "providerToAgreement",
-    values: [AddressLike]
+    functionFragment: "providerAgreements",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerIdToAgreements",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerIdToProvider",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerIdTotalCount",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "registerProvider",
-    values: [AddressLike]
+    values: [AddressLike, BigNumberish, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -109,30 +147,48 @@ export interface DDMeshMarketInterface extends Interface {
     values: [BytesLike, AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "setConnectionStringAndActivateAggrement",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "userToAgreement",
-    values: [AddressLike]
+    functionFragment: "userAgreements",
+    values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawBalanceUser",
-    values: [BigNumberish]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawReward",
-    values: [BigNumberish, AddressLike]
+    values: [BigNumberish, AddressLike, BigNumberish]
   ): string;
 
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "addressToProvider",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "agreementIdToAgreement",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "agreementIdTotalCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "agreements", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "closeAgreementByProvider",
     data: BytesLike
@@ -153,7 +209,19 @@ export interface DDMeshMarketInterface extends Interface {
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "providerToAgreement",
+    functionFragment: "providerAgreements",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerIdToAgreements",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerIdToProvider",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerIdTotalCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -170,15 +238,20 @@ export interface DDMeshMarketInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "setConnectionStringAndActivateAggrement",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "userToAgreement",
+    functionFragment: "userAgreements",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -191,12 +264,30 @@ export interface DDMeshMarketInterface extends Interface {
   ): Result;
 }
 
-export namespace AgreementClosedEvent {
-  export type InputTuple = [user: AddressLike, provider: AddressLike];
-  export type OutputTuple = [user: string, provider: string];
+export namespace AgreementActivatedEvent {
+  export type InputTuple = [
+    agreementId: BigNumberish,
+    userAddress: AddressLike,
+    providerAddress: AddressLike,
+    providerId: BigNumberish,
+    encApiKey: string,
+    encConnectionString: string
+  ];
+  export type OutputTuple = [
+    agreementId: bigint,
+    userAddress: string,
+    providerAddress: string,
+    providerId: bigint,
+    encApiKey: string,
+    encConnectionString: string
+  ];
   export interface OutputObject {
-    user: string;
-    provider: string;
+    agreementId: bigint;
+    userAddress: string;
+    providerAddress: string;
+    providerId: bigint;
+    encApiKey: string;
+    encConnectionString: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -204,11 +295,58 @@ export namespace AgreementClosedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace EnterAgreementAndPayEvent {
-  export type InputTuple = [amount: BigNumberish];
-  export type OutputTuple = [amount: bigint];
+export namespace AgreementClosedEvent {
+  export type InputTuple = [
+    agreementId: BigNumberish,
+    userAddress: AddressLike,
+    providerAddress: AddressLike,
+    providerId: BigNumberish,
+    encApiKey: string
+  ];
+  export type OutputTuple = [
+    agreementId: bigint,
+    userAddress: string,
+    providerAddress: string,
+    providerId: bigint,
+    encApiKey: string
+  ];
   export interface OutputObject {
-    amount: bigint;
+    agreementId: bigint;
+    userAddress: string;
+    providerAddress: string;
+    providerId: bigint;
+    encApiKey: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AgreementCreatedEvent {
+  export type InputTuple = [
+    agreementId: BigNumberish,
+    userAddress: AddressLike,
+    providerAddress: AddressLike,
+    providerId: BigNumberish,
+    encApiKey: string,
+    encConnectionString: string
+  ];
+  export type OutputTuple = [
+    agreementId: bigint,
+    userAddress: string,
+    providerAddress: string,
+    providerId: bigint,
+    encApiKey: string,
+    encConnectionString: string
+  ];
+  export interface OutputObject {
+    agreementId: bigint;
+    userAddress: string;
+    providerAddress: string;
+    providerId: bigint;
+    encApiKey: string;
+    encConnectionString: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -230,10 +368,26 @@ export namespace OwnershipTransferredEvent {
 }
 
 export namespace ProviderRegisteredEvent {
-  export type InputTuple = [provider: AddressLike];
-  export type OutputTuple = [provider: string];
+  export type InputTuple = [
+    id: BigNumberish,
+    provider: AddressLike,
+    fee: BigNumberish,
+    encApiKey: string,
+    ensName: string
+  ];
+  export type OutputTuple = [
+    id: bigint,
+    provider: string,
+    fee: bigint,
+    encApiKey: string,
+    ensName: string
+  ];
   export interface OutputObject {
+    id: bigint;
     provider: string;
+    fee: bigint;
+    encApiKey: string;
+    ensName: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -300,10 +454,11 @@ export namespace RoleRevokedEvent {
 }
 
 export namespace WithdrawRewardEvent {
-  export type InputTuple = [amount: BigNumberish];
-  export type OutputTuple = [amount: bigint];
+  export type InputTuple = [amount: BigNumberish, provider: AddressLike];
+  export type OutputTuple = [amount: bigint, provider: string];
   export interface OutputObject {
     amount: bigint;
+    provider: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -312,10 +467,11 @@ export namespace WithdrawRewardEvent {
 }
 
 export namespace WithdrawUserBalanceEvent {
-  export type InputTuple = [amount: BigNumberish];
-  export type OutputTuple = [amount: bigint];
+  export type InputTuple = [amount: BigNumberish, user: AddressLike];
+  export type OutputTuple = [amount: bigint, user: string];
   export interface OutputObject {
     amount: bigint;
+    user: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -368,12 +524,72 @@ export interface DDMeshMarket extends BaseContract {
 
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
-  closeAgreementByProvider: TypedContractMethod<[], [void], "nonpayable">;
+  addressToProvider: TypedContractMethod<
+    [arg0: AddressLike],
+    [
+      [bigint, string, bigint, string, string, bigint, bigint] & {
+        id: bigint;
+        pAddress: string;
+        fee: bigint;
+        encApiKey: string;
+        ensName: string;
+        noOfDbAgreements: bigint;
+        activeAgreements: bigint;
+      }
+    ],
+    "view"
+  >;
 
-  closeAgreementByUser: TypedContractMethod<[], [void], "nonpayable">;
+  agreementIdToAgreement: TypedContractMethod<
+    [arg0: BigNumberish],
+    [
+      [
+        bigint,
+        string,
+        bigint,
+        string,
+        bigint,
+        bigint,
+        string,
+        bigint,
+        bigint
+      ] & {
+        id: bigint;
+        user: string;
+        userBalance: bigint;
+        providerAddress: string;
+        providerId: bigint;
+        providerClaimed: bigint;
+        encConnectionString: string;
+        startTimeStamp: bigint;
+        status: bigint;
+      }
+    ],
+    "view"
+  >;
+
+  agreementIdTotalCount: TypedContractMethod<[], [bigint], "view">;
+
+  agreements: TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
+
+  closeAgreementByProvider: TypedContractMethod<
+    [_agreementId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  closeAgreementByUser: TypedContractMethod<
+    [_agreementId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
   enterAgreement: TypedContractMethod<
-    [_amount: BigNumberish, _provider: AddressLike],
+    [
+      _userAddress: AddressLike,
+      _providerId: BigNumberish,
+      _amount: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -394,22 +610,44 @@ export interface DDMeshMarket extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
-  providerToAgreement: TypedContractMethod<
-    [arg0: AddressLike],
+  providerAgreements: TypedContractMethod<
+    [arg0: AddressLike, arg1: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  providerIdToAgreements: TypedContractMethod<
+    [arg0: BigNumberish, arg1: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  providerIdToProvider: TypedContractMethod<
+    [arg0: BigNumberish],
     [
-      [string, bigint, string, bigint, boolean] & {
-        user: string;
-        userBalance: bigint;
-        provider: string;
-        providerClaimed: bigint;
-        active: boolean;
+      [bigint, string, bigint, string, string, bigint, bigint] & {
+        id: bigint;
+        pAddress: string;
+        fee: bigint;
+        encApiKey: string;
+        ensName: string;
+        noOfDbAgreements: bigint;
+        activeAgreements: bigint;
       }
     ],
     "view"
   >;
 
+  providerIdTotalCount: TypedContractMethod<[], [bigint], "view">;
+
   registerProvider: TypedContractMethod<
-    [_provider: AddressLike],
+    [
+      _providerAddress: AddressLike,
+      _fee: BigNumberish,
+      _enc_apiKey: string,
+      _ensName: string,
+      _noOfDbAgreements: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -428,11 +666,19 @@ export interface DDMeshMarket extends BaseContract {
     "nonpayable"
   >;
 
+  setConnectionStringAndActivateAggrement: TypedContractMethod<
+    [_agreementId: BigNumberish, _encConnectionString: string],
+    [void],
+    "nonpayable"
+  >;
+
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
     [boolean],
     "view"
   >;
+
+  token: TypedContractMethod<[], [string], "view">;
 
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
@@ -440,28 +686,20 @@ export interface DDMeshMarket extends BaseContract {
     "nonpayable"
   >;
 
-  userToAgreement: TypedContractMethod<
-    [arg0: AddressLike],
-    [
-      [string, bigint, string, bigint, boolean] & {
-        user: string;
-        userBalance: bigint;
-        provider: string;
-        providerClaimed: bigint;
-        active: boolean;
-      }
-    ],
+  userAgreements: TypedContractMethod<
+    [arg0: AddressLike, arg1: BigNumberish],
+    [bigint],
     "view"
   >;
 
   withdrawBalanceUser: TypedContractMethod<
-    [_amount: BigNumberish],
+    [_amount: BigNumberish, _agreementId: BigNumberish],
     [void],
     "nonpayable"
   >;
 
   withdrawReward: TypedContractMethod<
-    [_amount: BigNumberish, _user: AddressLike],
+    [_amount: BigNumberish, _user: AddressLike, _agreementId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -474,15 +712,71 @@ export interface DDMeshMarket extends BaseContract {
     nameOrSignature: "DEFAULT_ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "addressToProvider"
+  ): TypedContractMethod<
+    [arg0: AddressLike],
+    [
+      [bigint, string, bigint, string, string, bigint, bigint] & {
+        id: bigint;
+        pAddress: string;
+        fee: bigint;
+        encApiKey: string;
+        ensName: string;
+        noOfDbAgreements: bigint;
+        activeAgreements: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "agreementIdToAgreement"
+  ): TypedContractMethod<
+    [arg0: BigNumberish],
+    [
+      [
+        bigint,
+        string,
+        bigint,
+        string,
+        bigint,
+        bigint,
+        string,
+        bigint,
+        bigint
+      ] & {
+        id: bigint;
+        user: string;
+        userBalance: bigint;
+        providerAddress: string;
+        providerId: bigint;
+        providerClaimed: bigint;
+        encConnectionString: string;
+        startTimeStamp: bigint;
+        status: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "agreementIdTotalCount"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "agreements"
+  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
+  getFunction(
     nameOrSignature: "closeAgreementByProvider"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+  ): TypedContractMethod<[_agreementId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "closeAgreementByUser"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+  ): TypedContractMethod<[_agreementId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "enterAgreement"
   ): TypedContractMethod<
-    [_amount: BigNumberish, _provider: AddressLike],
+    [
+      _userAddress: AddressLike,
+      _providerId: BigNumberish,
+      _amount: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -507,23 +801,52 @@ export interface DDMeshMarket extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "providerToAgreement"
+    nameOrSignature: "providerAgreements"
   ): TypedContractMethod<
-    [arg0: AddressLike],
+    [arg0: AddressLike, arg1: BigNumberish],
+    [bigint],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "providerIdToAgreements"
+  ): TypedContractMethod<
+    [arg0: BigNumberish, arg1: BigNumberish],
+    [bigint],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "providerIdToProvider"
+  ): TypedContractMethod<
+    [arg0: BigNumberish],
     [
-      [string, bigint, string, bigint, boolean] & {
-        user: string;
-        userBalance: bigint;
-        provider: string;
-        providerClaimed: bigint;
-        active: boolean;
+      [bigint, string, bigint, string, string, bigint, bigint] & {
+        id: bigint;
+        pAddress: string;
+        fee: bigint;
+        encApiKey: string;
+        ensName: string;
+        noOfDbAgreements: bigint;
+        activeAgreements: bigint;
       }
     ],
     "view"
   >;
   getFunction(
+    nameOrSignature: "providerIdTotalCount"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "registerProvider"
-  ): TypedContractMethod<[_provider: AddressLike], [void], "nonpayable">;
+  ): TypedContractMethod<
+    [
+      _providerAddress: AddressLike,
+      _fee: BigNumberish,
+      _enc_apiKey: string,
+      _ensName: string,
+      _noOfDbAgreements: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -542,37 +865,50 @@ export interface DDMeshMarket extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "setConnectionStringAndActivateAggrement"
+  ): TypedContractMethod<
+    [_agreementId: BigNumberish, _encConnectionString: string],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "token"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "userToAgreement"
+    nameOrSignature: "userAgreements"
   ): TypedContractMethod<
-    [arg0: AddressLike],
-    [
-      [string, bigint, string, bigint, boolean] & {
-        user: string;
-        userBalance: bigint;
-        provider: string;
-        providerClaimed: bigint;
-        active: boolean;
-      }
-    ],
+    [arg0: AddressLike, arg1: BigNumberish],
+    [bigint],
     "view"
   >;
   getFunction(
     nameOrSignature: "withdrawBalanceUser"
-  ): TypedContractMethod<[_amount: BigNumberish], [void], "nonpayable">;
+  ): TypedContractMethod<
+    [_amount: BigNumberish, _agreementId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "withdrawReward"
   ): TypedContractMethod<
-    [_amount: BigNumberish, _user: AddressLike],
+    [_amount: BigNumberish, _user: AddressLike, _agreementId: BigNumberish],
     [void],
     "nonpayable"
   >;
 
+  getEvent(
+    key: "AgreementActivated"
+  ): TypedContractEvent<
+    AgreementActivatedEvent.InputTuple,
+    AgreementActivatedEvent.OutputTuple,
+    AgreementActivatedEvent.OutputObject
+  >;
   getEvent(
     key: "AgreementClosed"
   ): TypedContractEvent<
@@ -581,11 +917,11 @@ export interface DDMeshMarket extends BaseContract {
     AgreementClosedEvent.OutputObject
   >;
   getEvent(
-    key: "EnterAgreementAndPay"
+    key: "AgreementCreated"
   ): TypedContractEvent<
-    EnterAgreementAndPayEvent.InputTuple,
-    EnterAgreementAndPayEvent.OutputTuple,
-    EnterAgreementAndPayEvent.OutputObject
+    AgreementCreatedEvent.InputTuple,
+    AgreementCreatedEvent.OutputTuple,
+    AgreementCreatedEvent.OutputObject
   >;
   getEvent(
     key: "OwnershipTransferred"
@@ -638,7 +974,18 @@ export interface DDMeshMarket extends BaseContract {
   >;
 
   filters: {
-    "AgreementClosed(address,address)": TypedContractEvent<
+    "AgreementActivated(uint256,address,address,uint256,string,string)": TypedContractEvent<
+      AgreementActivatedEvent.InputTuple,
+      AgreementActivatedEvent.OutputTuple,
+      AgreementActivatedEvent.OutputObject
+    >;
+    AgreementActivated: TypedContractEvent<
+      AgreementActivatedEvent.InputTuple,
+      AgreementActivatedEvent.OutputTuple,
+      AgreementActivatedEvent.OutputObject
+    >;
+
+    "AgreementClosed(uint256,address,address,uint256,string)": TypedContractEvent<
       AgreementClosedEvent.InputTuple,
       AgreementClosedEvent.OutputTuple,
       AgreementClosedEvent.OutputObject
@@ -649,15 +996,15 @@ export interface DDMeshMarket extends BaseContract {
       AgreementClosedEvent.OutputObject
     >;
 
-    "EnterAgreementAndPay(uint256)": TypedContractEvent<
-      EnterAgreementAndPayEvent.InputTuple,
-      EnterAgreementAndPayEvent.OutputTuple,
-      EnterAgreementAndPayEvent.OutputObject
+    "AgreementCreated(uint256,address,address,uint256,string,string)": TypedContractEvent<
+      AgreementCreatedEvent.InputTuple,
+      AgreementCreatedEvent.OutputTuple,
+      AgreementCreatedEvent.OutputObject
     >;
-    EnterAgreementAndPay: TypedContractEvent<
-      EnterAgreementAndPayEvent.InputTuple,
-      EnterAgreementAndPayEvent.OutputTuple,
-      EnterAgreementAndPayEvent.OutputObject
+    AgreementCreated: TypedContractEvent<
+      AgreementCreatedEvent.InputTuple,
+      AgreementCreatedEvent.OutputTuple,
+      AgreementCreatedEvent.OutputObject
     >;
 
     "OwnershipTransferred(address,address)": TypedContractEvent<
@@ -671,7 +1018,7 @@ export interface DDMeshMarket extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "ProviderRegistered(address)": TypedContractEvent<
+    "ProviderRegistered(uint256,address,uint256,string,string)": TypedContractEvent<
       ProviderRegisteredEvent.InputTuple,
       ProviderRegisteredEvent.OutputTuple,
       ProviderRegisteredEvent.OutputObject
@@ -715,7 +1062,7 @@ export interface DDMeshMarket extends BaseContract {
       RoleRevokedEvent.OutputObject
     >;
 
-    "WithdrawReward(uint256)": TypedContractEvent<
+    "WithdrawReward(uint256,address)": TypedContractEvent<
       WithdrawRewardEvent.InputTuple,
       WithdrawRewardEvent.OutputTuple,
       WithdrawRewardEvent.OutputObject
@@ -726,7 +1073,7 @@ export interface DDMeshMarket extends BaseContract {
       WithdrawRewardEvent.OutputObject
     >;
 
-    "WithdrawUserBalance(uint256)": TypedContractEvent<
+    "WithdrawUserBalance(uint256,address)": TypedContractEvent<
       WithdrawUserBalanceEvent.InputTuple,
       WithdrawUserBalanceEvent.OutputTuple,
       WithdrawUserBalanceEvent.OutputObject

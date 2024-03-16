@@ -13,7 +13,7 @@ const deployDDMeshMarket: DeployFunction = async function (
   const ddmesh = await deploy("DDMeshMarket", {
     from: deployer,
     // token address
-    args: ["0x601c2f884f68308c64d662bb6073e108955e3ed7"],
+    args: ["0x15223Dee9891d84609889798bb63ADe5e1FDcB15"],
     log: false,
     // we need to wait if on a live network so we can verify properly
     // waitConfirmations: networkConfig[chainId]?.blockConfirmations || 0,

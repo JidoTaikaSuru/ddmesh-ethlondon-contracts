@@ -10,9 +10,9 @@ const deployToken: DeployFunction = async function (
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
   console.log("Token deployed by:", deployer);
-  const token = await deploy("Token", {
+  const token = await deploy("DDMTOKEN", {
     from: deployer,
-    // args: [],
+    args: ["0x1b6bB595fFD8a0dCDeac79f805d35c5101273F9a"],
     log: true,
     // we need to wait if on a live network so we can verify properly
     // waitConfirmations: networkConfig[chainId]?.blockConfirmations || 0,
@@ -21,11 +21,11 @@ const deployToken: DeployFunction = async function (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
   ) {
-    await verify(token.address, "contracts/Token.sol:Token", []);
+    await verify(token.address, "contracts/Token.sol:DDMTOKEN", []);
   }
   console.log("Token deployed to:", token.address);
   console.log("Token deployed on network:", network.name);
-  const Token = await hre.ethers.getContractFactory("Token");
+  const Token = await hre.ethers.getContractFactory("DDMTOKEN");
   const tokenContract = Token.attach(token.address);
   const txRole = await tokenContract.grantRole(
     await tokenContract.MINTER_ROLE(),
