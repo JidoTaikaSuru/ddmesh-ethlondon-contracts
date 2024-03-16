@@ -33,6 +33,7 @@ export declare namespace DDMeshMarket {
     providerClaimed: BigNumberish;
     encConnectionString: string;
     startTimeStamp: BigNumberish;
+    providerRewardsWithdrawLastTimeStamp: BigNumberish;
     status: BigNumberish;
   };
 
@@ -45,6 +46,7 @@ export declare namespace DDMeshMarket {
     providerClaimed: bigint,
     encConnectionString: string,
     startTimeStamp: bigint,
+    providerRewardsWithdrawLastTimeStamp: bigint,
     status: bigint
   ] & {
     id: bigint;
@@ -55,6 +57,7 @@ export declare namespace DDMeshMarket {
     providerClaimed: bigint;
     encConnectionString: string;
     startTimeStamp: bigint;
+    providerRewardsWithdrawLastTimeStamp: bigint;
     status: bigint;
   };
 
@@ -129,7 +132,6 @@ export interface DDMeshMarketInterface extends Interface {
       | "token"
       | "transferOwnership"
       | "userAgreements"
-      | "withdrawBalanceUser"
       | "withdrawReward"
   ): FunctionFragment;
 
@@ -286,12 +288,8 @@ export interface DDMeshMarketInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawBalanceUser",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "withdrawReward",
-    values: [BigNumberish, AddressLike, BigNumberish]
+    values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(
@@ -418,10 +416,6 @@ export interface DDMeshMarketInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawBalanceUser",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "withdrawReward",
     data: BytesLike
   ): Result;
@@ -464,14 +458,16 @@ export namespace AgreementClosedEvent {
     userAddress: AddressLike,
     providerAddress: AddressLike,
     providerId: BigNumberish,
-    encApiKey: string
+    encApiKey: string,
+    encConnectionString: string
   ];
   export type OutputTuple = [
     agreementId: bigint,
     userAddress: string,
     providerAddress: string,
     providerId: bigint,
-    encApiKey: string
+    encApiKey: string,
+    encConnectionString: string
   ];
   export interface OutputObject {
     agreementId: bigint;
@@ -479,6 +475,7 @@ export namespace AgreementClosedEvent {
     providerAddress: string;
     providerId: bigint;
     encApiKey: string;
+    encConnectionString: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -617,9 +614,18 @@ export namespace RoleRevokedEvent {
 }
 
 export namespace WithdrawRewardEvent {
-  export type InputTuple = [amount: BigNumberish, provider: AddressLike];
-  export type OutputTuple = [amount: bigint, provider: string];
+  export type InputTuple = [
+    agreementId: BigNumberish,
+    amount: BigNumberish,
+    provider: AddressLike
+  ];
+  export type OutputTuple = [
+    agreementId: bigint,
+    amount: bigint,
+    provider: string
+  ];
   export interface OutputObject {
+    agreementId: bigint;
     amount: bigint;
     provider: string;
   }
@@ -630,9 +636,14 @@ export namespace WithdrawRewardEvent {
 }
 
 export namespace WithdrawUserBalanceEvent {
-  export type InputTuple = [amount: BigNumberish, user: AddressLike];
-  export type OutputTuple = [amount: bigint, user: string];
+  export type InputTuple = [
+    agreementId: BigNumberish,
+    amount: BigNumberish,
+    user: AddressLike
+  ];
+  export type OutputTuple = [agreementId: bigint, amount: bigint, user: string];
   export interface OutputObject {
+    agreementId: bigint;
     amount: bigint;
     user: string;
   }
@@ -716,6 +727,7 @@ export interface DDMeshMarket extends BaseContract {
         bigint,
         string,
         bigint,
+        bigint,
         bigint
       ] & {
         id: bigint;
@@ -726,6 +738,7 @@ export interface DDMeshMarket extends BaseContract {
         providerClaimed: bigint;
         encConnectionString: string;
         startTimeStamp: bigint;
+        providerRewardsWithdrawLastTimeStamp: bigint;
         status: bigint;
       }
     ],
@@ -922,14 +935,8 @@ export interface DDMeshMarket extends BaseContract {
     "view"
   >;
 
-  withdrawBalanceUser: TypedContractMethod<
-    [_amount: BigNumberish, _agreementId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-
   withdrawReward: TypedContractMethod<
-    [_amount: BigNumberish, _user: AddressLike, _agreementId: BigNumberish],
+    [_agreementId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -973,6 +980,7 @@ export interface DDMeshMarket extends BaseContract {
         bigint,
         string,
         bigint,
+        bigint,
         bigint
       ] & {
         id: bigint;
@@ -983,6 +991,7 @@ export interface DDMeshMarket extends BaseContract {
         providerClaimed: bigint;
         encConnectionString: string;
         startTimeStamp: bigint;
+        providerRewardsWithdrawLastTimeStamp: bigint;
         status: bigint;
       }
     ],
@@ -1176,19 +1185,8 @@ export interface DDMeshMarket extends BaseContract {
     "view"
   >;
   getFunction(
-    nameOrSignature: "withdrawBalanceUser"
-  ): TypedContractMethod<
-    [_amount: BigNumberish, _agreementId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "withdrawReward"
-  ): TypedContractMethod<
-    [_amount: BigNumberish, _user: AddressLike, _agreementId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+  ): TypedContractMethod<[_agreementId: BigNumberish], [void], "nonpayable">;
 
   getEvent(
     key: "AgreementActivated"
@@ -1273,7 +1271,7 @@ export interface DDMeshMarket extends BaseContract {
       AgreementActivatedEvent.OutputObject
     >;
 
-    "AgreementClosed(uint256,address,address,uint256,string)": TypedContractEvent<
+    "AgreementClosed(uint256,address,address,uint256,string,string)": TypedContractEvent<
       AgreementClosedEvent.InputTuple,
       AgreementClosedEvent.OutputTuple,
       AgreementClosedEvent.OutputObject
@@ -1350,7 +1348,7 @@ export interface DDMeshMarket extends BaseContract {
       RoleRevokedEvent.OutputObject
     >;
 
-    "WithdrawReward(uint256,address)": TypedContractEvent<
+    "WithdrawReward(uint256,uint256,address)": TypedContractEvent<
       WithdrawRewardEvent.InputTuple,
       WithdrawRewardEvent.OutputTuple,
       WithdrawRewardEvent.OutputObject
@@ -1361,7 +1359,7 @@ export interface DDMeshMarket extends BaseContract {
       WithdrawRewardEvent.OutputObject
     >;
 
-    "WithdrawUserBalance(uint256,address)": TypedContractEvent<
+    "WithdrawUserBalance(uint256,uint256,address)": TypedContractEvent<
       WithdrawUserBalanceEvent.InputTuple,
       WithdrawUserBalanceEvent.OutputTuple,
       WithdrawUserBalanceEvent.OutputObject
