@@ -121,10 +121,6 @@ declare module "hardhat/types/runtime" {
       name: "DDMTOKEN",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.DDMTOKEN__factory>;
-    getContractFactory(
-      name: "Token",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Token__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -261,11 +257,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.DDMTOKEN>;
-    getContractAt(
-      name: "Token",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Token>;
 
     deployContract(
       name: "AccessControl",
@@ -375,10 +366,6 @@ declare module "hardhat/types/runtime" {
       name: "DDMTOKEN",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.DDMTOKEN>;
-    deployContract(
-      name: "Token",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Token>;
 
     deployContract(
       name: "AccessControl",
@@ -515,11 +502,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.DDMTOKEN>;
-    deployContract(
-      name: "Token",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Token>;
 
     // default types
     getContractFactory(

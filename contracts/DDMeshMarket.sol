@@ -131,7 +131,7 @@ contract DDMeshMarket is AccessControl, Ownable {
     function enterAgreement(uint256 _providerId, uint256 _amount) public {
         require(_amount > 0, "amount must be greater than 0");
         uint256 id = ++agreementIdTotalCount;
-        Provider memory provider = providerIdToProvider[_providerId];
+        Provider storage provider = providerIdToProvider[_providerId];
         require(provider.noOfDbAgreements > provider.activeAgreements, "no of agreements exceeded");
         token.transferFrom(msg.sender, address(this), _amount);
         Agreement memory agreement = Agreement(
@@ -168,6 +168,8 @@ contract DDMeshMarket is AccessControl, Ownable {
         );
     }
 
+
+
     function registerProvider(
         uint256 _fee,
         string memory _enc_apiKey,
@@ -177,7 +179,7 @@ contract DDMeshMarket is AccessControl, Ownable {
     ) public {
         // Require description < 256 characters
         require(_fee > 0, "fee must be greater than 0");
-        uint256 id = ++agreementIdTotalCount;
+        uint256 id = ++providerIdTotalCount;
         Provider memory _provider = Provider(id, msg.sender, _fee, _enc_apiKey, _ensName, _description, _noOfDbAgreements, 0);
         providerIdToProvider[id] = _provider;
         providers.push(_provider);

@@ -60,5 +60,3 @@ export type { IToken } from "./contracts/interface/IToken";
 export { IToken__factory } from "./factories/contracts/interface/IToken__factory";
 export type { DDMTOKEN } from "./contracts/Token.sol/DDMTOKEN";
 export { DDMTOKEN__factory } from "./factories/contracts/Token.sol/DDMTOKEN__factory";
-export type { Token } from "./contracts/Token.sol/Token";
-export { Token__factory } from "./factories/contracts/Token.sol/Token__factory";

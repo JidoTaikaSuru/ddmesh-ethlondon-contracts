@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export { DDMTOKEN__factory } from "./DDMTOKEN__factory";
-export { Token__factory } from "./Token__factory";
