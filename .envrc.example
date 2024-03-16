@@ -1,0 +1,4 @@
+export PRIVATE_KEY="efb2b0cbe03c2cacee6b3a9b111b55361bdb9464c2f2ff944b11ce3e68b0ce06"
+export SEPOLIA_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/<API-KEY>>"
+export ARB_SEPOLIA_RPC_URL="https://arb-sepolia.g.alchemy.com/v2/<API-KEY>"
+export COINMARKETCAP_API_KEY=""
