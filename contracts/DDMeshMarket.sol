@@ -66,6 +66,8 @@ contract DDMeshMarket is AccessControl, Ownable {
         uint256 activeAgreements;
     }
 
+    
+
     uint256 public agreementIdTotalCount;
     uint256 public providerIdTotalCount;
 
@@ -141,13 +143,13 @@ contract DDMeshMarket is AccessControl, Ownable {
         agreement.userBalance += _amount;
         agreementIdToAgreement[id] = agreement;
         agreements.push(id);
-        userAgreements[_userAddress].push(id);
+        userAgreements[msg.sender].push(id);
         providerAgreements[provider.pAddress].push(id);
         providerIdToAgreements[_providerId].push(id);
 
         // Increase provider TVL by fee (we'll render it in months in the UI)
         providerToTVLAcrossAllAgreements[provider.pAddress] += provider.fee;
-        emit AgreementCreated(id, _userAddress, provider.pAddress, _providerId, provider.encApiKey, "");
+        emit AgreementCreated(id, msg.sender, provider.pAddress, _providerId, provider.encApiKey, "");
     }
 
     function setConnectionStringAndActivateAgreement(uint256 _agreementId, string memory _encConnectionString) public {
@@ -176,7 +178,7 @@ contract DDMeshMarket is AccessControl, Ownable {
         // Require description < 256 characters
         require(_fee > 0, "fee must be greater than 0");
         uint256 id = ++agreementIdTotalCount;
-        Provider memory _provider = Provider(id, msg.sender, _fee, _enc_apiKey, _ensName, _noOfDbAgreements, 0);
+        Provider memory _provider = Provider(id, msg.sender, _fee, _enc_apiKey, _ensName, _description, _noOfDbAgreements, 0);
         providerIdToProvider[id] = _provider;
         providers.push(_provider);
         emit ProviderRegistered(id, msg.sender, _fee, _enc_apiKey, _ensName);
