@@ -107,11 +107,13 @@ export interface DDMeshMarketInterface extends Interface {
       | "getAgreement"
       | "getAllAgreements"
       | "getAllProviders"
+      | "getBalanceAvailable"
       | "getProviderAgreements"
       | "getProviderByAddress"
       | "getProviderByProviderId"
       | "getProviderIdToAgreements"
       | "getProviderTVLs"
+      | "getRewardAvailable"
       | "getRoleAdmin"
       | "getUserAgreements"
       | "grantRole"
@@ -120,6 +122,7 @@ export interface DDMeshMarketInterface extends Interface {
       | "providerAgreements"
       | "providerIdToAgreements"
       | "providerIdToProvider"
+      | "providerIdToTVLAcrossAllAgreements"
       | "providerIdTotalCount"
       | "providerToTVLAcrossAllAgreements"
       | "providers"
@@ -194,6 +197,10 @@ export interface DDMeshMarketInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getBalanceAvailable",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getProviderAgreements",
     values: [AddressLike]
   ): string;
@@ -212,6 +219,10 @@ export interface DDMeshMarketInterface extends Interface {
   encodeFunctionData(
     functionFragment: "getProviderTVLs",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRewardAvailable",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -240,6 +251,10 @@ export interface DDMeshMarketInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "providerIdToProvider",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerIdToTVLAcrossAllAgreements",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -334,6 +349,10 @@ export interface DDMeshMarketInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getBalanceAvailable",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getProviderAgreements",
     data: BytesLike
   ): Result;
@@ -351,6 +370,10 @@ export interface DDMeshMarketInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getProviderTVLs",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRewardAvailable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -374,6 +397,10 @@ export interface DDMeshMarketInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "providerIdToProvider",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerIdToTVLAcrossAllAgreements",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -781,6 +808,12 @@ export interface DDMeshMarket extends BaseContract {
     "view"
   >;
 
+  getBalanceAvailable: TypedContractMethod<
+    [_agreementId: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
   getProviderAgreements: TypedContractMethod<
     [_providerAddress: AddressLike],
     [bigint[]],
@@ -805,7 +838,17 @@ export interface DDMeshMarket extends BaseContract {
     "view"
   >;
 
-  getProviderTVLs: TypedContractMethod<[], [[string[], bigint[]]], "view">;
+  getProviderTVLs: TypedContractMethod<
+    [],
+    [[bigint[], string[], bigint[]]],
+    "view"
+  >;
+
+  getRewardAvailable: TypedContractMethod<
+    [_agreementId: BigNumberish],
+    [bigint],
+    "view"
+  >;
 
   getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], "view">;
 
@@ -855,6 +898,12 @@ export interface DDMeshMarket extends BaseContract {
         activeAgreements: bigint;
       }
     ],
+    "view"
+  >;
+
+  providerIdToTVLAcrossAllAgreements: TypedContractMethod<
+    [arg0: BigNumberish],
+    [bigint],
     "view"
   >;
 
@@ -1030,6 +1079,9 @@ export interface DDMeshMarket extends BaseContract {
     nameOrSignature: "getAllProviders"
   ): TypedContractMethod<[], [DDMeshMarket.ProviderStructOutput[]], "view">;
   getFunction(
+    nameOrSignature: "getBalanceAvailable"
+  ): TypedContractMethod<[_agreementId: BigNumberish], [bigint], "view">;
+  getFunction(
     nameOrSignature: "getProviderAgreements"
   ): TypedContractMethod<[_providerAddress: AddressLike], [bigint[]], "view">;
   getFunction(
@@ -1051,7 +1103,10 @@ export interface DDMeshMarket extends BaseContract {
   ): TypedContractMethod<[_providerId: BigNumberish], [bigint[]], "view">;
   getFunction(
     nameOrSignature: "getProviderTVLs"
-  ): TypedContractMethod<[], [[string[], bigint[]]], "view">;
+  ): TypedContractMethod<[], [[bigint[], string[], bigint[]]], "view">;
+  getFunction(
+    nameOrSignature: "getRewardAvailable"
+  ): TypedContractMethod<[_agreementId: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "getRoleAdmin"
   ): TypedContractMethod<[role: BytesLike], [string], "view">;
@@ -1111,6 +1166,9 @@ export interface DDMeshMarket extends BaseContract {
     ],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "providerIdToTVLAcrossAllAgreements"
+  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "providerIdTotalCount"
   ): TypedContractMethod<[], [bigint], "view">;

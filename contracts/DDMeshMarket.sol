@@ -18,7 +18,11 @@ contract DDMeshMarket is AccessControl, Ownable {
         string encConnectionString
     );
     event AgreementClosed(
-        uint256 agreementId, address userAddress, address providerAddress, uint256 providerId, string encApiKey,
+        uint256 agreementId,
+        address userAddress,
+        address providerAddress,
+        uint256 providerId,
+        string encApiKey,
         string encConnectionString
     );
     event AgreementActivated(
@@ -68,8 +72,6 @@ contract DDMeshMarket is AccessControl, Ownable {
         uint256 activeAgreements;
     }
 
-    
-
     uint256 public agreementIdTotalCount;
     uint256 public providerIdTotalCount;
 
@@ -80,6 +82,7 @@ contract DDMeshMarket is AccessControl, Ownable {
     mapping(address => uint256[]) public providerAgreements; // mapping of provider to agreements
     mapping(uint256 => uint256[]) public providerIdToAgreements; // mapping of provider id to agreements
     mapping(address => uint256) public providerToTVLAcrossAllAgreements; //Convenience mapping that shows how much value a provider is securing, used for leaderboard
+    mapping(uint256 => uint256) public providerIdToTVLAcrossAllAgreements; //Convenience mapping that shows how much value a provider is securing, used for leaderboard
     uint256[] public agreements;
     Provider[] public providers;
 
@@ -125,14 +128,17 @@ contract DDMeshMarket is AccessControl, Ownable {
         return providers;
     }
 
-    function getProviderTVLs() public view returns (address[] memory, uint256[] memory) {
-        uint256[] memory tvls = new uint256[](providers.length);
+    function getProviderTVLs() public view returns (uint256[] memory, address[] memory, uint256[] memory) {
+        uint256[] memory providerIds = new uint256[](providers.length);
         address[] memory providerAddresses = new address[](providers.length);
+        uint256[] memory providerTVLs = new uint256[](providers.length);
+
         for (uint256 i = 0; i < providers.length; i++) {
+            providerIds[i] = providers[i].id;
             providerAddresses[i] = providers[i].pAddress;
-            tvls[i] = providerToTVLAcrossAllAgreements[providers[i].pAddress];
+            providerTVLs[i] = providerIdToTVLAcrossAllAgreements[providers[i].id];
         }
-        return (providerAddresses, tvls);
+        return (providerIds, providerAddresses, providerTVLs);
     }
 
     function enterAgreement(uint256 _providerId, uint256 _amount) public {
@@ -142,7 +148,16 @@ contract DDMeshMarket is AccessControl, Ownable {
         require(provider.noOfDbAgreements > provider.activeAgreements, "no of agreements exceeded");
         token.transferFrom(msg.sender, address(this), _amount);
         Agreement memory agreement = Agreement(
-            id, msg.sender, _amount, provider.pAddress, _providerId, 0, "", block.timestamp,block.timestamp, AgreementStatus.ENTERED
+            id,
+            msg.sender,
+            _amount,
+            provider.pAddress,
+            _providerId,
+            0,
+            "",
+            block.timestamp,
+            block.timestamp,
+            AgreementStatus.ENTERED
         );
 
         provider.activeAgreements += 1;
@@ -156,6 +171,7 @@ contract DDMeshMarket is AccessControl, Ownable {
 
         // Increase provider TVL by fee (we'll render it in months in the UI)
         providerToTVLAcrossAllAgreements[provider.pAddress] += provider.fee;
+        providerIdToTVLAcrossAllAgreements[provider.id] += provider.fee;
         emit AgreementCreated(id, msg.sender, provider.pAddress, _providerId, provider.encApiKey, "");
     }
 
@@ -175,8 +191,6 @@ contract DDMeshMarket is AccessControl, Ownable {
         );
     }
 
-
-
     function registerProvider(
         uint256 _fee,
         string memory _enc_apiKey,
@@ -187,24 +201,41 @@ contract DDMeshMarket is AccessControl, Ownable {
         // Require description < 256 characters
         require(_fee > 0, "fee must be greater than 0");
         uint256 id = ++providerIdTotalCount;
-        Provider memory _provider = Provider(id, msg.sender, _fee, _enc_apiKey, _ensName, _description, _noOfDbAgreements, 0);
+        Provider memory _provider =
+            Provider(id, msg.sender, _fee, _enc_apiKey, _ensName, _description, _noOfDbAgreements, 0);
         providerIdToProvider[id] = _provider;
         providers.push(_provider);
         emit ProviderRegistered(id, msg.sender, _fee, _enc_apiKey, _ensName);
+    }
+
+    function getRewardAvailable(uint256 _agreementId) public view returns (uint256) {
+        Agreement storage agreement = agreementIdToAgreement[_agreementId];
+        Provider storage provider = providerIdToProvider[agreement.providerId];
+        uint256 rewardAmount = (block.timestamp - agreement.providerRewardsWithdrawLastTimeStamp) * provider.fee;
+        return rewardAmount;
+    }
+
+    function getBalanceAvailable(uint256 _agreementId) public view returns (uint256) {
+        Agreement storage agreement = agreementIdToAgreement[_agreementId];
+        Provider storage provider = providerIdToProvider[agreement.providerId];
+        uint256 rewardAmount = (block.timestamp - agreement.startTimeStamp) * provider.fee;
+        uint256 balance = agreement.userBalance - rewardAmount;
+        return balance;
     }
 
     // Provider can withdraw fee from user.
     function withdrawReward(uint256 _agreementId) public {
         Agreement storage agreement = agreementIdToAgreement[_agreementId];
         require(agreement.providerAddress == msg.sender, "provider not found");
-        uint256 rewardAmount = (agreement.providerRewardsWithdrawLastTimeStamp - block.timestamp) * providerIdToProvider[agreement.providerId].fee;
+        uint256 rewardAmount = (agreement.providerRewardsWithdrawLastTimeStamp - block.timestamp)
+            * providerIdToProvider[agreement.providerId].fee;
         // require(agreement.userBalance >= rewardAmount, "Insufficient User balance");
 
-        if(agreement.userBalance < rewardAmount){
+        if (agreement.userBalance < rewardAmount) {
             rewardAmount = agreement.userBalance;
             closeAgreementByProvider(_agreementId);
         }
-        
+
         agreement.providerRewardsWithdrawLastTimeStamp = block.timestamp;
         agreement.userBalance -= rewardAmount;
         agreement.providerClaimed += rewardAmount;
@@ -233,7 +264,15 @@ contract DDMeshMarket is AccessControl, Ownable {
 
         // Decrease provider TVL by fee (we'll render it in months in the UI)
         providerToTVLAcrossAllAgreements[provider.pAddress] -= provider.fee;
-        emit AgreementClosed(_agreementId, agreement.user, agreement.providerAddress, provider.id, provider.encApiKey, agreement.encConnectionString);
+        providerIdToTVLAcrossAllAgreements[provider.id] -= provider.fee;
+        emit AgreementClosed(
+            _agreementId,
+            agreement.user,
+            agreement.providerAddress,
+            provider.id,
+            provider.encApiKey,
+            agreement.encConnectionString
+        );
     }
 
     function closeAgreementByProvider(uint256 _agreementId) public {
@@ -246,7 +285,15 @@ contract DDMeshMarket is AccessControl, Ownable {
         withdrawReward(agreement.id);
         // Decrease provider TVL by fee (we'll render it in months in the UI)
         providerToTVLAcrossAllAgreements[provider.pAddress] -= provider.fee;
-        emit AgreementClosed(_agreementId, agreement.user, agreement.providerAddress, provider.id, provider.encApiKey, agreement.encConnectionString);
+        providerIdToTVLAcrossAllAgreements[provider.id] -= provider.fee;
+        emit AgreementClosed(
+            _agreementId,
+            agreement.user,
+            agreement.providerAddress,
+            provider.id,
+            provider.encApiKey,
+            agreement.encConnectionString
+        );
     }
 }
 

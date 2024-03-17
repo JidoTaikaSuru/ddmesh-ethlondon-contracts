@@ -132,3 +132,5 @@ dist
 
 artifacts
 cache
+.env
+.envrc

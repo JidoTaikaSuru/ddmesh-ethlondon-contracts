@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ERC20Burnable } from "./ERC20Burnable";
-export type { ERC20Capped } from "./ERC20Capped";
 export type { ERC20Pausable } from "./ERC20Pausable";
 export type { ERC20Permit } from "./ERC20Permit";
 export type { IERC20Metadata } from "./IERC20Metadata";
