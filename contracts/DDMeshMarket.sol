@@ -275,6 +275,14 @@ contract DDMeshMarket is AccessControl, Ownable {
         );
     }
 
+    function topUpExistingAgreement(uint256 _agreementId, uint256 _amount) public {
+        Agreement storage agreement = agreementIdToAgreement[_agreementId];
+        require(agreement.user == msg.sender, "not your agreement");
+        require(agreement.status == AgreementStatus.ACTIVE, "agreement is not active");
+        token.transferFrom(msg.sender, address(this), _amount);
+        agreement.userBalance += _amount;
+    }
+
     function closeAgreementByProvider(uint256 _agreementId) public {
         Agreement storage agreement = agreementIdToAgreement[_agreementId];
         Provider memory provider = providerIdToProvider[agreement.providerId];
