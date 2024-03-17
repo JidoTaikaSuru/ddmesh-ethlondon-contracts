@@ -811,7 +811,7 @@ export interface DDMeshMarket extends BaseContract {
 
   getUserAgreements: TypedContractMethod<
     [_userAddress: AddressLike],
-    [bigint[]],
+    [DDMeshMarket.AgreementStructOutput[]],
     "view"
   >;
 
@@ -1057,7 +1057,11 @@ export interface DDMeshMarket extends BaseContract {
   ): TypedContractMethod<[role: BytesLike], [string], "view">;
   getFunction(
     nameOrSignature: "getUserAgreements"
-  ): TypedContractMethod<[_userAddress: AddressLike], [bigint[]], "view">;
+  ): TypedContractMethod<
+    [_userAddress: AddressLike],
+    [DDMeshMarket.AgreementStructOutput[]],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "grantRole"
   ): TypedContractMethod<

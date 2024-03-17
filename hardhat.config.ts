@@ -29,6 +29,9 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 // const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || "";
 
+const DD_MESH_ORBIT_RPC_URL = process.env.DD_MESH_ORBIT_RPC_URL || "";
+
+
 // const FUJI_RPC_URL = process.env.FUJI_RPC_URL;
 // const SNOWTRACE_API_KEY = process.env.SNOWTRACE_API_KEY || "";
 
@@ -49,6 +52,11 @@ const config: HardhatUserConfig = {
       url: ARBITRUM_SEPOLIA_RPC_URL,
       accounts: [PRIVATE_KEY],
       chainId: 421614,
+    },
+    ddMeshNetwork: {
+      url: DD_MESH_ORBIT_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 82554,
     },
     sepolia: {
       url: SEPOLIA_RPC_URL,

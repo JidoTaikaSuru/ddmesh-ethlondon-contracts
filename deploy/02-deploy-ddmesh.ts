@@ -13,6 +13,8 @@ const deployDDMeshMarket: DeployFunction = async function (
   const ddmesh = await deploy("DDMeshMarket", {
     from: deployer,
     // token address
+    // Orbit :0xBBB017c1db26096280852A93eF9e9A355f82C82d
+    // arbSepolia: 0x15223Dee9891d84609889798bb63ADe5e1FDcB15
     args: ["0x15223Dee9891d84609889798bb63ADe5e1FDcB15"],
     log: false,
     // we need to wait if on a live network so we can verify properly
