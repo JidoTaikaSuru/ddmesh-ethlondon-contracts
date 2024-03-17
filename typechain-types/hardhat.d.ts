@@ -50,6 +50,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Burnable__factory>;
     getContractFactory(
+      name: "ERC20Capped",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Capped__factory>;
+    getContractFactory(
       name: "ERC20Pausable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Pausable__factory>;
@@ -164,6 +168,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20Burnable>;
     getContractAt(
+      name: "ERC20Capped",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Capped>;
+    getContractAt(
       name: "ERC20Pausable",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -286,6 +295,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Burnable>;
     deployContract(
+      name: "ERC20Capped",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC20Capped>;
+    deployContract(
       name: "ERC20Pausable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Pausable>;
@@ -399,6 +412,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Burnable>;
+    deployContract(
+      name: "ERC20Capped",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC20Capped>;
     deployContract(
       name: "ERC20Pausable",
       args: any[],

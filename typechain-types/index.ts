@@ -24,6 +24,8 @@ export type { ERC20 } from "./@openzeppelin/contracts/token/ERC20/ERC20";
 export { ERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/ERC20__factory";
 export type { ERC20Burnable } from "./@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable";
 export { ERC20Burnable__factory } from "./factories/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable__factory";
+export type { ERC20Capped } from "./@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped";
+export { ERC20Capped__factory } from "./factories/@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped__factory";
 export type { ERC20Pausable } from "./@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable";
 export { ERC20Pausable__factory } from "./factories/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable__factory";
 export type { ERC20Permit } from "./@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit";

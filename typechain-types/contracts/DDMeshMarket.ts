@@ -133,6 +133,7 @@ export interface DDMeshMarketInterface extends Interface {
       | "setConnectionStringAndActivateAgreement"
       | "supportsInterface"
       | "token"
+      | "topUpExistingAgreement"
       | "transferOwnership"
       | "userAgreements"
       | "withdrawReward"
@@ -295,6 +296,10 @@ export interface DDMeshMarketInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "topUpExistingAgreement",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
@@ -434,6 +439,10 @@ export interface DDMeshMarketInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "topUpExistingAgreement",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -972,6 +981,12 @@ export interface DDMeshMarket extends BaseContract {
 
   token: TypedContractMethod<[], [string], "view">;
 
+  topUpExistingAgreement: TypedContractMethod<
+    [_agreementId: BigNumberish, _amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
     [void],
@@ -1236,6 +1251,13 @@ export interface DDMeshMarket extends BaseContract {
   getFunction(
     nameOrSignature: "token"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "topUpExistingAgreement"
+  ): TypedContractMethod<
+    [_agreementId: BigNumberish, _amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
